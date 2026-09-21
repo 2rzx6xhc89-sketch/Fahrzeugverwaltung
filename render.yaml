@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: fahrzeugverwaltung-aerzen
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeployTrigger: commit
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: DATABASE_URL
+        fromDatabase:
+          name: fahrzeugverwaltung-aerzen-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ADMIN_USERNAME
+        value: admin
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: CORS_ORIGIN
+        value: '*'
+
+databases:
+  - name: fahrzeugverwaltung-aerzen-db
+    plan: free
+    databaseName: fahrzeugverwaltung
+    user: fahrzeugverwaltung

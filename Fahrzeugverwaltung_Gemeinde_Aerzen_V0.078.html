@@ -1,4 +1,4 @@
-<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0d4268"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="OPTA"><link rel="manifest" href="OPTA_V49_manifest.webmanifest"><link rel="apple-touch-icon" href="OPTA_V49_icon_192.png"><title>Fahrzeugverwaltung V0.084</title>
+<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0d4268"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="OPTA"><link rel="manifest" href="OPTA_V49_manifest.webmanifest"><link rel="apple-touch-icon" href="OPTA_V49_icon_192.png"><title>Fahrzeugverwaltung V0.085</title>
 <style>
 :root{--bg:#eef3f6;--card:#fff;--text:#16242e;--muted:#647784;--line:#d4dee5;--brand:#0d4268;--accent:#0f8794;--soft:#e4f4f5;--danger:#b13b49;--shadow:0 5px 18px rgba(13,66,104,.11)}
 [data-theme=dark]{--bg:#0f171d;--card:#18232b;--text:#eef5f8;--muted:#aab8c1;--line:#344651;--brand:#125f92;--accent:#38bdc8;--soft:#173a3e;--shadow:0 5px 20px rgba(0,0,0,.3)}
@@ -1221,7 +1221,7 @@ window.addEventListener('storage',function(event){listeners.slice().forEach(func
 </div>
 <div id="legalOverlay" class="legal-overlay" hidden aria-hidden="true">
   <article class="legal-panel" role="dialog" aria-modal="true" aria-labelledby="legalTitle">
-    <div class="legal-head"><div><h2 id="legalTitle">Impressum &amp; Datenschutz</h2><div class="legal-meta">Fahrzeugverwaltung · Version V0.084</div></div><button type="button" class="legal-close" aria-label="Rechtliche Hinweise schließen">×</button></div>
+    <div class="legal-head"><div><h2 id="legalTitle">Impressum &amp; Datenschutz</h2><div class="legal-meta">Fahrzeugverwaltung · Version V0.085</div></div><button type="button" class="legal-close" aria-label="Rechtliche Hinweise schließen">×</button></div>
     <p class="legal-notice"><strong>Hinweis:</strong> Diese Fassung ist ein technischer Entwurf für die interne Anwendung. Verantwortlichkeit, Rechtsgrundlagen, Löschfristen und Freigabe sind vor dem produktiven Einsatz durch den Flecken Aerzen beziehungsweise dessen Datenschutzbeauftragten verbindlich zu prüfen.</p>
     <section class="legal-section">
       <h3>Impressum</h3>
@@ -1231,7 +1231,7 @@ window.addEventListener('storage',function(event){listeners.slice().forEach(func
       <p>Telefon: 05154 988-0<br>Telefax: 05154 2016<br>E-Mail: <a href="mailto:rathaus@aerzen.de">rathaus@aerzen.de</a></p>
       <p>Der Flecken Aerzen ist eine Körperschaft des öffentlichen Rechts.</p>
       <h4>Anwendung</h4>
-      <p>Fahrzeugverwaltung der Führungsgruppe Gemeinde Aerzen, Version V0.084.</p>
+      <p>Fahrzeugverwaltung der Führungsgruppe Gemeinde Aerzen, Version V0.085.</p>
       <h4>Technische Umsetzung</h4>
       <p>Jörn Preuß</p>
       <h4>Zweck und Nutzung</h4>
@@ -1258,7 +1258,7 @@ window.addEventListener('storage',function(event){listeners.slice().forEach(func
       <h4>9. Datensicherheit</h4>
       <p>Der Zugriff ist durch eine lokale Benutzer- und Rollenverwaltung geschützt. Exportierte Dateien und Endgeräte sind durch die jeweils verantwortlichen Benutzer angemessen gegen unbefugten Zugriff zu sichern.</p>
       <h4>10. Stand</h4>
-      <p>Version V0.084 · 21. September 2026</p>
+      <p>Version V0.085 · 21. September 2026</p>
     </section>
   </article>
 </div>
@@ -1270,7 +1270,10 @@ const OPERATIONAL_KEY_V084='optaOperationalV084';
 let DATA_BY_ID_V084=new Map();
 function rebuildDataIndexV084(){DATA_BY_ID_V084=new Map(DATA.map(r=>[String(r.id),r]))}
 function loadOperationalV084(){let state={};try{state=JSON.parse(localStorage.getItem(OPERATIONAL_KEY_V084)||'{}')}catch(e){}DATA.forEach(r=>{const x=state[String(r.id)];if(!x)return;if(x.einsatzStatus!==undefined)r.einsatzStatus=x.einsatzStatus;if(x.einsatz!==undefined)r.einsatz=!!x.einsatz;if(x.personnelIncident!==undefined)r.personnelIncident=x.personnelIncident;if(x.strengthReported!==undefined)r.strengthReported=!!x.strengthReported;if(x.strengthReportedAt!==undefined)r.strengthReportedAt=x.strengthReportedAt});rebuildDataIndexV084()}
-function saveOperationalRecordV084(r){let state={};try{state=JSON.parse(localStorage.getItem(OPERATIONAL_KEY_V084)||'{}')}catch(e){}state[String(r.id)]={einsatzStatus:r.einsatzStatus||(r.einsatz?'einsatz':'frei'),einsatz:!!r.einsatz,personnelIncident:r.personnelIncident||null,strengthReported:!!r.strengthReported,strengthReportedAt:r.strengthReportedAt||null};localStorage.setItem(OPERATIONAL_KEY_V084,JSON.stringify(state))}
+let operationalCacheV085={};try{operationalCacheV085=JSON.parse(localStorage.getItem(OPERATIONAL_KEY_V084)||'{}')}catch(e){operationalCacheV085={}}
+let operationalWriteTimerV085=0;
+function persistOperationalV085(){localStorage.setItem(OPERATIONAL_KEY_V084,JSON.stringify(operationalCacheV085));localStorage.setItem('optaDataV49',JSON.stringify(DATA));if(window.optaEmitStorageV082){window.optaEmitStorageV082({key:OPERATIONAL_KEY_V084,newValue:JSON.stringify(operationalCacheV085)});window.optaEmitStorageV082({key:'optaDataV49',newValue:localStorage.getItem('optaDataV49')})}try{window.__optaSyncChannelV085?.postMessage({type:'operational',state:operationalCacheV085})}catch(e){}}
+function saveOperationalRecordV084(r){operationalCacheV085[String(r.id)]={einsatzStatus:r.einsatzStatus||(r.einsatz?'einsatz':'frei'),einsatz:!!r.einsatz,personnelIncident:r.personnelIncident||null,strengthReported:!!r.strengthReported,strengthReportedAt:r.strengthReportedAt||null};clearTimeout(operationalWriteTimerV085);operationalWriteTimerV085=setTimeout(persistOperationalV085,40)}
 loadOperationalV084();
 DATA.forEach(r=>{if(!Array.isArray(r.ausruestung))r.ausruestung=[];if(typeof r.name!=='string')r.name='';if(typeof r.equipmentCategory!=='string')r.equipmentCategory='';if(typeof r.einsatz!=='boolean')r.einsatz=false;if(!r.personnelDefault||typeof r.personnelDefault!=='object')r.personnelDefault={mannschaft:0,paTraeger:0};if(r.einsatz&&(!r.personnelIncident||typeof r.personnelIncident!=='object'))r.personnelIncident={...r.personnelDefault};if(!r.ausruestung.length)r.equipmentCategory=''});const BASE_DATA=JSON.parse(JSON.stringify(DATA));try{const saved=localStorage.getItem('optaDataV49');if(saved){const parsed=JSON.parse(saved);if(Array.isArray(parsed)&&parsed.length)DATA=parsed}}catch(e){}const $=id=>document.getElementById(id);const ids=['qFunk','qOrt','qTyp','qStadt','qSonder','qAusruestung'];let quick='all';let favorites=new Set(JSON.parse(localStorage.getItem('optaFavs')||'[]'));
 const norm=v=>String(v==null?'':v).toLocaleLowerCase('de-DE').replace(/\s+/g,' ').trim();const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -2739,5 +2742,13 @@ function syncViewsV081(){if(frameV081)return;frameV081=requestAnimationFrame(fun
 document.addEventListener('click',function(e){if(e.target.closest('#openMapCenterV055,#openMapBigscreenV053,[data-view="deployment"],#deployments'))syncViewsV081()},{passive:true,capture:true});
 window.addEventListener('opta-sync-v081',syncViewsV081);
 window.optaSyncViewsV081=syncViewsV081;
+})();
+</script><script>/* V0.085: zuverlässige Synchronisation für Tabs/Fenster desselben Browsers und Ursprungs. */
+(function(){'use strict';
+const OP='optaOperationalV084',DATAKEY='optaDataV49';
+function applyOperationalV085(raw){let state={};try{state=typeof raw==='string'?JSON.parse(raw||'{}'):(raw||{})}catch(e){return}let changed=false;DATA.forEach(function(r){const x=state[String(r.id)];if(!x)return;r.einsatzStatus=x.einsatzStatus!==undefined?x.einsatzStatus:r.einsatzStatus;r.einsatz=x.einsatz!==undefined?!!x.einsatz:r.einsatz;if(x.personnelIncident!==undefined)r.personnelIncident=x.personnelIncident;if(x.strengthReported!==undefined)r.strengthReported=!!x.strengthReported;if(x.strengthReportedAt!==undefined)r.strengthReportedAt=x.strengthReportedAt;changed=true});if(changed){if(typeof rebuildDataIndexV084==='function')rebuildDataIndexV084();requestAnimationFrame(function(){try{render()}catch(e){}try{renderDeployments()}catch(e){}try{renderIncidentBoard()}catch(e){}try{window.optaSyncViewsV081?.()}catch(e){}})}}
+window.addEventListener('storage',function(e){if(e.key===OP)applyOperationalV085(e.newValue);if(e.key===DATAKEY&&e.newValue){try{const rows=JSON.parse(e.newValue);if(Array.isArray(rows)){DATA.length=0;rows.forEach(r=>DATA.push(r));rebuildDataIndexV084();applyOperationalV085(localStorage.getItem(OP)||'{}')}}catch(err){}}});
+if('BroadcastChannel' in window){const channel=new BroadcastChannel('opta-sync-v085');window.__optaSyncChannelV085=channel;channel.onmessage=function(e){if(e.data?.type==='operational')applyOperationalV085(e.data.state)}}
+applyOperationalV085(localStorage.getItem(OP)||'{}');
 })();
 </script></body></html>

@@ -1,31 +1,23 @@
-# Fahrzeugverwaltung Aerzen V0.079.2 - Render Free Auto
+# Fahrzeugverwaltung Gemeinde Aerzen V0.085 Online
 
-Diese Variante benötigt keinen lokalen Integrationsbefehl. Render führt beim Build automatisch `npm run build` aus. Dabei wird die V0.078-HTML-Datei gesucht, als `public/index.html` vorbereitet und mit Online-Synchronisation und Online-Anmeldung ergänzt.
+Komplettpaket für GitHub und Render: Node.js/Express, PostgreSQL, JWT-Anmeldung, REST-API, Audit-Protokoll, WebSocket und 3-Sekunden-Abgleich.
 
-## GitHub-Upload
-
-Lade den vollständigen Inhalt dieses Ordners hoch. Wenn die vollständige V0.078 als `Fahrzeugverwaltung_Gemeinde_Aerzen_V0.078.html` im Repository-Stamm liegt, integriert Render die Oberfläche automatisch. Ein lokaler Schritt mit `integrate-v078.mjs` ist nicht erforderlich.
+## Einmalig vor dem GitHub-Upload
+1. Die angepasste V0.085-HTML in die Wurzel dieses Projektordners kopieren.
+2. Im Terminal im Projektordner ausführen:
+   `node integrate-html.mjs Fahrzeugverwaltung_Gemeinde_Aerzen_V0.085_mit_Versionsanzeige.html`
+3. Prüfen, dass `public/index.html` jetzt die vollständige Oberfläche enthält.
+4. Den gesamten Ordner in ein privates GitHub-Repository hochladen.
 
 ## Render
+1. In Render `New > Blueprint` wählen und das Repository verbinden.
+2. `ADMIN_PASSWORD` als starkes Startpasswort setzen.
+3. Blueprint bereitstellen.
+4. `/api/health` prüfen.
+5. Mit `admin` und dem gesetzten Passwort anmelden.
 
-1. Blueprint aus dem privaten GitHub-Repository erstellen.
-2. `ADMIN_PASSWORD` mit mindestens 12 Zeichen eingeben.
-3. Render erstellt kostenlosen Web Service und kostenlose PostgreSQL-Ressource.
-4. Build: `npm install && npm run build`.
-5. Start: `npm start`; dabei laufen Migration, Admin-Bootstrap und Serverstart.
-6. `/api/health` muss `{ "ok": true }` liefern.
+## Enthaltene Online-Zustände
+Fahrzeuge, operativer Einsatzstatus, Abschnitte, Lagekarte, Markerfilter, Logbuch, Lageinformationen und Einstellungen.
 
-## Automatische Variablen
-
-- `DATABASE_URL`: Render PostgreSQL
-- `JWT_SECRET`: wird generiert
-- `NODE_VERSION`: 20
-- `ADMIN_USERNAME`: admin
-- `CORS_ORIGIN`: zunächst `*`
-
-## Sicherheit
-
-- Repository privat halten.
-- Keine `.env` hochladen.
-- `CORS_ORIGIN` nach dem Test auf die tatsächliche Render-Domain begrenzen.
-- Die kostenlose Render-Ausprägung nur für Tests/Prototypen einsetzen.
+## Wichtiger Hinweis zur kostenlosen Variante
+Das Paket nutzt kostenlose Render-Instanzen. Diese sind laut Render für Tests und Vorschauen gedacht. Der Web Service kann nach Inaktivität herunterfahren. Das Dateisystem ist flüchtig. Die kostenlose PostgreSQL-Instanz kann zeitlich begrenzt sein. Für einen dauerhaften Produktivbetrieb später eine dauerhafte PostgreSQL-Datenbank über `DATABASE_URL` verbinden.

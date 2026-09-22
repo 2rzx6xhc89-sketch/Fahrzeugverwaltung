@@ -1,1 +1,48 @@
-<!doctype html><html lang="de"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Fahrzeugverwaltung V0.085 Online</title><style>body{font-family:system-ui;max-width:760px;margin:50px auto;padding:20px}code{background:#eee;padding:3px 6px}</style><h1>Fahrzeugverwaltung V0.085 Online</h1><p>Die Server-, Datenbank- und Synchronisationsschicht ist bereit.</p><p>Lege deine angepasste HTML-Datei in die Repository-Wurzel und führe vor dem Upload aus:</p><pre><code>node integrate-html.mjs Fahrzeugverwaltung_Gemeinde_Aerzen_V0.085_mit_Versionsanzeige.html</code></pre><script src="/online-sync.js"></script></html>
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Fahrzeugverwaltung V0.085 Online</title>
+  <style>
+    body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;margin:0;min-height:100vh;display:grid;place-items:center;background:#eef3f6;color:#16242e}
+    main{width:min(92%,720px);padding:24px;border-radius:18px;background:#fff;box-shadow:0 8px 28px #1232}
+    h1{margin-top:0;color:#0d4268}.error{color:#a12435;white-space:pre-wrap}code{background:#edf2f5;padding:2px 5px;border-radius:5px}
+  </style>
+</head>
+<body>
+<main id="loader">
+  <h1>Fahrzeugverwaltung V0.085 Online</h1>
+  <p>Die vollständige Anwendung wird geladen.</p>
+</main>
+<script>
+(async function(){
+  'use strict';
+  const candidates=[
+    '/Fahrzeugverwaltung_Gemeinde_Aerzen_V0.085_mit_Versionsanzeige.html',
+    '/Fahrzeugverwaltung_Gemeinde_Aerzen_V0.085.html',
+    '/V0.085.html',
+    '/app.html'
+  ];
+  let source='', selected='';
+  for(const path of candidates){
+    try{
+      const response=await fetch(path,{cache:'no-store'});
+      if(!response.ok)continue;
+      const text=await response.text();
+      if(/<h1[^>]*>\s*Fahrzeugverwaltung/i.test(text)&&/<\/body>/i.test(text)&&text.length>100000){source=text;selected=path;break}
+    }catch(_error){}
+  }
+  if(!source){
+    document.getElementById('loader').innerHTML='<h1>V0.085 nicht gefunden</h1><p class="error">Lege die vollständige V0.085 zusätzlich in den Ordner <code>public</code>. Unterstützte Namen:\n'+candidates.join('\n')+'</p>';
+    return;
+  }
+  if(!source.includes('/online-sync.js'))source=source.replace(/<\/body>/i,'<script src="/online-sync.js"><\\/script>\n</body>');
+  source=source.replace(/<title>[^<]*<\/title>/i,'<title>Fahrzeugverwaltung V0.085 Online</title>');
+  source=source.replace(/<h1>Fahrzeugverwaltung(?: V0\.085)?<\/h1>/i,'<h1>Fahrzeugverwaltung V0.085 Online</h1>');
+  document.open();document.write(source);document.close();
+  console.info('Online-Oberfläche geladen aus',selected);
+})();
+</script>
+</body>
+</html>
